@@ -3,7 +3,7 @@ import * as ethers from "ethers";
 import * as Utils from "@counterfactual/test-utils";
 import Multisig from "../helpers/multisig";
 
-const GuessNumber = artifacts.require("GuessNumber");
+const CommitRevealApp = artifacts.require("CommitRevealApp");
 
 const web3 = (global as any).web3;
 const { provider, unlockedAccount } = Utils.setupTestEnv(web3);
@@ -57,7 +57,7 @@ enum Player {
   GUESSING = 1
 }
 
-describe("GuessNumber", async () => {
+describe("CommitRevealApp", async () => {
   const StateChannel = artifacts.require("StateChannel");
   const ConditionalTransfer = artifacts.require("ConditionalTransfer");
   const StaticCall = artifacts.require("StaticCall");
@@ -78,7 +78,7 @@ describe("GuessNumber", async () => {
   const termsEncoding = "tuple(uint8 assetType, uint256 limit, address token)";
 
   beforeEach(async () => {
-    GuessNumber.link("StaticCall", StaticCall.address);
+    CommitRevealApp.link("StaticCall", StaticCall.address);
 
     StateChannel.link("Signatures", Signatures.address);
     StateChannel.link("StaticCall", StaticCall.address);
@@ -99,14 +99,17 @@ describe("GuessNumber", async () => {
       limit: Utils.UNIT_ETH.mul(2),
       token: Utils.zeroAddress
     };
-    // 2. Deploy GuessNumber app
-    const App = await Utils.deployContract(GuessNumber, unlockedAccount);
+    // 2. Deploy CommitRevealApp app
+    const appContract = await Utils.deployContract(
+      CommitRevealApp,
+      unlockedAccount
+    );
     app = {
-      addr: App.address,
-      reducer: App.interface.functions.reducer.sighash,
-      resolver: App.interface.functions.resolver.sighash,
-      turnTaker: App.interface.functions.getTurnTaker.sighash,
-      isStateFinal: App.interface.functions.isStateFinal.sighash
+      addr: appContract.address,
+      reducer: appContract.interface.functions.reducer.sighash,
+      resolver: appContract.interface.functions.resolver.sighash,
+      turnTaker: appContract.interface.functions.getTurnTaker.sighash,
+      isStateFinal: appContract.interface.functions.isStateFinal.sighash
     };
 
     // 3. Deploy StateChannel

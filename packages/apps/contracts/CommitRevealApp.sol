@@ -6,7 +6,7 @@ import "@counterfactual/contracts/contracts/lib/Transfer.sol";
 
 // Enums in libraries or calls to libraries using ABI encoded structs are broken in Solidity
 // Therefore, we are forced to use contracts
-contract GuessNumber {
+contract CommitRevealApp {
 
   enum ActionType {
     SET_MAX,
