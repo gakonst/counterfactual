@@ -86,6 +86,8 @@ describe("CommitRevealApp", async () => {
   });
 
   it("should complete a full lifecycle", async () => {
+    const startBalanceA = await A.getBalance();
+    const startBalanceB = await B.getBalance();
     // 1. Deploy & fund multisig
     const multisig = new Multisig([A.address, B.address]);
     await multisig.deploy(unlockedAccount);
@@ -220,7 +222,9 @@ describe("CommitRevealApp", async () => {
       [A, B]
     );
     // 8. Verify balance of A and B
-    (await A.getBalance()).should.be.bignumber.eq(Utils.UNIT_ETH.mul(2));
-    (await B.getBalance()).should.be.bignumber.eq(Utils.UNIT_ETH.mul(0));
+    (await A.getBalance())
+      .sub(startBalanceA)
+      .should.be.bignumber.eq(Utils.UNIT_ETH.mul(2));
+    (await B.getBalance()).should.be.bignumber.eq(startBalanceB);
   });
 });
