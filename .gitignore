@@ -27,6 +27,7 @@ lerna-debug.log
 packages/contracts/lib
 packages/test-utils/lib
 packages/apps/lib
+packages/machine/dist
 
 # build artifacts
 packages/*/*.json-e
